@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>💖 Bir Sorum Var 💖</title>
+  <style>
+    body {
+      text-align: center;
+      margin-top: 120px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(#ffe6f2, #fff0f8);
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 32px;
+      color: #ff1493;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+      position: relative;
+    }
+
+    #yesBtn {
+      background-color: #32cd32;
+      color: white;
+      font-weight: bold;
+    }
+
+    #noBtn {
+      background-color: #ff4d4d;
+      color: white;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* Uçan kalpler */
+    .heart {
+      position: absolute;
+      color: #ff1493;
+      font-size: 24px;
+      animation: floatUp 2s linear forwards;
+    }
+
+    @keyframes floatUp {
+      from { opacity: 1; transform: translateY(0); }
+      to { opacity: 0; transform: translateY(-100px); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Kız arkadaşım olur musun? 💘</h1>
+
+  <button id="yesBtn" onclick="yesClicked()">Evet 💚</button>
+  <button id="noBtn" onclick="noClicked()">Hayır ❌</button>
+
+  <script>
+    let noCount = 0;
+
+    function yesClicked() {
+      alert("Hayırlı olsun 🥳❤️ Artık bir çiftiz!");
+      spawnHearts(15);
+    }
+
+    function noClicked() {
+      noCount++;
+
+      const noBtn = document.getElementById("noBtn");
+      const yesBtn = document.getElementById("yesBtn");
+
+      // NO butonu kaçsın
+      let randX = (Math.random() * 300) - 150;
+      let randY = (Math.random() * 300) - 150;
+
+      noBtn.style.transform = `translate(${randX}px, ${randY}px)`;
+
+      // YES butonu büyüsün
+      yesBtn.style.transform = `scale(${1 + noCount * 0.2})`;
+
+      // NO butonu artık tıklanamaz hale gelsin
+      if (noCount >= 5) {
+        noBtn.disabled = true;
+        noBtn.innerText = "Kaçamazsın 😏";
+      }
+    }
+
+    // Kalp animasyonu
+    function spawnHearts(amount) {
+      for (let i = 0; i < amount; i++) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "❤️";
+        heart.style.left = Math.random() * window.innerWidth + "px";
+        heart.style.top = Math.random() * window.innerHeight + "px";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 2000);
+      }
+    }
+  </script>
+
+</body>
+</html>
