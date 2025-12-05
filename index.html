@@ -40,10 +40,9 @@
 
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(-20px); }
-      to { opacity: 1; transform: translateY(0);}
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Uçan kalpler */
     .heart {
       position: absolute;
       color: #ff1493;
@@ -55,21 +54,94 @@
       from { opacity: 1; transform: translateY(0); }
       to { opacity: 0; transform: translateY(-100px); }
     }
+
+    /* Overlay arka plan */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.8s ease;
+    }
+
+    #overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #overlay h2 {
+      color: #fff;
+      font-size: 50px;
+      text-shadow: 0 0 15px #ff66aa, 0 0 25px #ff1493;
+      animation: glow 1.5s infinite alternate ease-in-out;
+      z-index: 10;
+    }
+
+    @keyframes glow {
+      from { opacity: 0.7; transform: scale(1); }
+      to { opacity: 1; transform: scale(1.08); }
+    }
+
+    /* ✨ PARILTILAR (SPARKLE) ✨ */
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: radial-gradient(circle, #fff 40%, #ff99dd 60%, transparent 70%);
+      border-radius: 50%;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 6px #ff6ad5);
+      animation: fall 2s linear forwards;
+    }
+
+    @keyframes fall {
+      from { transform: translateY(-50px); opacity: 1; }
+      to { transform: translateY(300px); opacity: 0; }
+    }
   </style>
 </head>
 <body>
 
   <h1>Kız arkadaşım olur musun? 💘</h1>
 
-  <button id="yesBtn" onclick="yesClicked()">Evet 💚</button>
+  <button id="yesBtn" onclick="yesClicked()">Evet ❤️</button>
   <button id="noBtn" onclick="noClicked()">Hayır ❌</button>
+
+  <!-- Overlay -->
+  <div id="overlay">
+    <h2>ARTIK RESMEN SEVGİLİYİZ 💖</h2>
+  </div>
+
+  <!-- SES EFEKTİ -->
+  <audio id="dingSound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_f03a1d7a27.mp3?filename=correct-2-46134.mp3"></audio>
 
   <script>
     let noCount = 0;
 
+    let yesFontSize = 20;
+    let noFontSize = 20;
+    let yesPadding = 15;
+    let noPadding = 15;
+
     function yesClicked() {
-      alert("Hayırlı olsun 🥳❤️ Artık bir çiftiz!");
-      spawnHearts(15);
+      // SES
+      document.getElementById("dingSound").play();
+
+      alert("Hayırlı olsun artık çiftiz.");
+      spawnHearts(20);
+
+      // Overlay aç
+      document.getElementById("overlay").classList.add("show");
+
+      // Parıltı yağmuru
+      sparkleRain();
     }
 
     function noClicked() {
@@ -78,23 +150,28 @@
       const noBtn = document.getElementById("noBtn");
       const yesBtn = document.getElementById("yesBtn");
 
-      // NO butonu kaçsın
       let randX = (Math.random() * 300) - 150;
       let randY = (Math.random() * 300) - 150;
-
       noBtn.style.transform = `translate(${randX}px, ${randY}px)`;
 
-      // YES butonu büyüsün
-      yesBtn.style.transform = `scale(${1 + noCount * 0.2})`;
+      yesFontSize += 4;
+      noFontSize -= 3;
 
-      // NO butonu artık tıklanamaz hale gelsin
-      if (noCount >= 5) {
+      yesPadding += 3;
+      noPadding = Math.max(5, noPadding - 2);
+
+      yesBtn.style.fontSize = yesFontSize + "px";
+      noBtn.style.fontSize = noFontSize + "px";
+
+      yesBtn.style.padding = yesPadding + "px " + (yesPadding * 2) + "px";
+      noBtn.style.padding = noPadding + "px " + (noPadding * 2) + "px";
+
+      if (noFontSize <= 8) {
         noBtn.disabled = true;
-        noBtn.innerText = "Kaçamazsın 😏";
+        noBtn.innerText = "Daha fazla hayır diyemezsin 😏";
       }
     }
 
-    // Kalp animasyonu
     function spawnHearts(amount) {
       for (let i = 0; i < amount; i++) {
         const heart = document.createElement("div");
@@ -107,6 +184,24 @@
         setTimeout(() => heart.remove(), 2000);
       }
     }
+
+    /* ✨ PARILTILI YAĞMUR FONKSİYONU ✨ */
+    function sparkleRain() {
+      for (let i = 0; i < 40; i++) {
+        const spark = document.createElement("div");
+        spark.className = "sparkle";
+
+        spark.style.left = Math.random() * window.innerWidth + "px";
+        spark.style.top = (-50 - Math.random() * 100) + "px";
+        spark.style.width = (4 + Math.random() * 4) + "px";
+        spark.style.height = spark.style.width;
+
+        document.getElementById("overlay").appendChild(spark);
+
+        setTimeout(() => spark.remove(), 2500);
+      }
+    }
+
   </script>
 
 </body>
